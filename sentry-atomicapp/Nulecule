@@ -1,0 +1,68 @@
+---
+specversion: 0.0.2
+id: sentry-atomicapp
+
+metadata:
+  name: sentry Atomic App
+  appversion: 1.0.0
+  description: This is sentry
+
+params:
+  - name: db_user
+    description: Database user
+    default: sentry
+  - name: db_pass
+    description: Database password
+    default: password
+  - name: db_name
+    description: Database name
+    default: sentry
+
+graph:
+  - name: postgresql
+    params:
+      - name: name
+        description: Container name for postgresql
+        default: postgres
+      - name: image
+        description: Container image name for postgresql
+        default: postgres
+    artifacts:
+      docker:
+        - file://artifacts/docker/postgres
+      kubernetes:
+        - file://artifacts/kubernetes/postgres-pod.yaml
+        - file://artifacts/kubernetes/postgres-service.yaml
+
+  - name: redis
+    params:
+      - name: name
+        description: Container name for redis
+        default: redis
+      - name: image
+        description: Container image name for redis
+        default: redis
+    artifacts:
+      docker:
+        - file://artifacts/docker/redis
+      kubernetes:
+        - file://artifacts/kubernetes/redis-pod.yaml
+        - file://artifacts/kubernetes/redis-service.yaml
+
+  - name: sentry
+    params:
+      - name: name
+        description: Container name for sentry
+        default: sentry
+      - name: image
+        description: Container image name for sentry
+        default: rtnpro/sentry
+      - name: nodePort
+        description: Host port to bind sentry service to
+        default: 30001
+    artifacts:
+      docker:
+        - file://artifacts/docker/sentry
+      kubernetes:
+        - file://artifacts/kubernetes/sentry-pod.yaml
+        - file://artifacts/kubernetes/sentry-service.yaml

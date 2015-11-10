@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: sentry
+  labels:
+    name: sentry
+spec:
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+      nodePort: $nodePort
+  selector:
+    name: sentry
+  type: "NodePort"
