@@ -1,0 +1,1 @@
+docker run --name sentry --link sentry_redis:redis --link sentry_postgres:postgres --publish $nodePort:9000 -d $image
