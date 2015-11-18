@@ -6,26 +6,40 @@ metadata:
   name: Wordpress App
   appversion: 2.0.0
   description: Simple Wordpress atomic app. Uses remote mysql atomic app.
+
+params:
+  - name: wp_image
+    description:  wordpress image
+    default: wordpress
+  - name: db_user
+    description: username for database
+  - name: db_pass
+    description:  password for db_user
+  - name: db_name
+    description: database name
+  - name: db_host
+    description: database host
+    default: mariadb:3306
+  - name: port
+    description: port for docker port mapping (used only with docker provider)
+    default: 8080
+
 graph:
   - name: aggregated-mariadb-atomicapp
     source: docker://projectatomic/mariadb-centos7-atomicapp
+    args:
+        db_user: $db_user
+        db_pass: $db_pass
+        db_name: $db_name
+        # we let Mariadb Nulecule appl work with it's default root pass
   - name: wordpress
-    params:
-      - name: image
-        description:  wordpress image
-        default: wordpress
-      - name: db_user
-        description: username for database
-      - name: db_pass
-        description:  password for db_user
-      - name: db_name
-        description: database name
-      - name: db_host
-        description: database host
-        default: mariadb:3306
-      - name: port
-        description: port for docker port mapping (used only with docker provider)
-        default: 8080
+    args:
+        image: $wp_image
+        db_user: $db_user
+        db_pass: $db_pass
+        db_name: $db_name
+        db_host: $db_host
+        port: $port
     artifacts:
       kubernetes:
         - file://artifacts/kubernetes/wordpress-pod.yaml

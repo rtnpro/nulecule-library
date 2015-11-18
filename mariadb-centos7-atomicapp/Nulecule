@@ -6,18 +6,25 @@ metadata:
   name: MySQL Atomic App
   appversion: 1.0.0
   description: This is MySQL
+
+params:
+  - name: db_user
+    description: Database User
+  - name: db_pass
+    description: Database Password
+  - name: db_name
+    description: Database Name
+  - name: root_pass
+    description: Database Root User Password
+    default: MySQLPass
+
 graph:
   - name: mariadb-atomicapp
-    params:
-      - name: db_user
-        description: Database User
-      - name: db_pass
-        description: Database Password
-      - name: db_name
-        description: Database Name
-      - name: root_pass
-        description: Database Root User Password
-        default: MySQLPass
+    args:
+        db_user: $db_user
+        db_pass: $db_pass
+        db_name: $db_name
+        root_pass: $root_pass
     artifacts:
       kubernetes:
         - file://artifacts/kubernetes/mariadb-pod.yaml
