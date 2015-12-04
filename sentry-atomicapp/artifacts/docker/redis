@@ -1,1 +1,1 @@
-docker run --name=sentry_redis -d $image
+docker run --name sentry_redis -d $image

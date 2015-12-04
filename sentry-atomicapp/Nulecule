@@ -17,16 +17,28 @@ params:
   - name: db_name
     description: Database name
     default: sentry
+  - name: postgres_container_name
+    desciption: Container name for postgresql
+    default: postgres
+  - name: postgres_container_image
+    decription: Container image name for postgresql
+    default: postgres
+  - name: redis_container_name
+    default: redis
+  - name: redis_image_name
+    default: redis
+  - name: sentry_container_name
+    default: sentry
+  - name: sentry_image_name
+    default: rtnpro/sentry
+  - name: sentry_node_port
+    default: 30001
 
 graph:
   - name: postgresql
     params:
-      - name: name
-        description: Container name for postgresql
-        default: postgres
-      - name: image
-        description: Container image name for postgresql
-        default: postgres
+      name: $postgres_container_name
+      image: $postgres_container_image
     artifacts:
       docker:
         - file://artifacts/docker/postgres
@@ -36,12 +48,8 @@ graph:
 
   - name: redis
     params:
-      - name: name
-        description: Container name for redis
-        default: redis
-      - name: image
-        description: Container image name for redis
-        default: redis
+      name: $redis_container_naem
+      image: $redis_image_name
     artifacts:
       docker:
         - file://artifacts/docker/redis
@@ -51,15 +59,9 @@ graph:
 
   - name: sentry
     params:
-      - name: name
-        description: Container name for sentry
-        default: sentry
-      - name: image
-        description: Container image name for sentry
-        default: rtnpro/sentry
-      - name: nodePort
-        description: Host port to bind sentry service to
-        default: 30001
+      name: $sentry_container_name
+      image: $sentry_image_name
+      nodePort: $sentry_node_port
     artifacts:
       docker:
         - file://artifacts/docker/sentry

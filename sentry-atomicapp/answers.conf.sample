@@ -1,19 +1,13 @@
 [general]
-namespace=default
-provider=kubernetes
-db_user=sentry
-db_pass=sentry
-db_name=sentry
-
-[postgresql]
-name=postgres
-image=postgres
-
-[redis]
-name=redis
-image=redis
-
-[sentry]
-name=sentry
-image=rtnpro/sentry
-nodePort=30001
+redis_image_name = redis
+postgres_container_name = postgres
+db_pass = password
+redis_container_name = redis
+db_name = sentry
+db_user = sentry
+sentry_container_name = sentry
+sentry_node_port = 30001
+postgres_container_image = postgres
+sentry_image_name = rtnpro/sentry
+namespace = default
+provider = docker
