@@ -2,7 +2,7 @@
    "kind":"Service",
    "apiVersion":"v1",
    "metadata":{
-      "name":"redis-slave",
+      "name":"$service",
       "labels":{
          "app":"redis",
          "role":"slave"
