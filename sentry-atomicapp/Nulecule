@@ -39,23 +39,18 @@ graph:
     params:
       name: $postgres_container_name
       image: $postgres_container_image
-    artifacts:
-      docker:
-        - file://artifacts/docker/postgres
-      kubernetes:
-        - file://artifacts/kubernetes/postgres-pod.yaml
-        - file://artifacts/kubernetes/postgres-service.yaml
+      db_name: $db_name
+      db_user: $db_user
+      db_pass: $db_pass
+      service: postgres
+    source: docker://pa/pg
 
   - name: redis
     params:
-      name: $redis_container_naem
+      name: $redis_container_name
       image: $redis_image_name
-    artifacts:
-      docker:
-        - file://artifacts/docker/redis
-      kubernetes:
-        - file://artifacts/kubernetes/redis-pod.yaml
-        - file://artifacts/kubernetes/redis-service.yaml
+      master_service: redis
+    source: docker://pa/redis
 
   - name: sentry
     params:
