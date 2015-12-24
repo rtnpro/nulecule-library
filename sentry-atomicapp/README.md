@@ -1,5 +1,20 @@
 # Build
 
+## Build refactored redis Nulecule app
+
+```
+[sudo] docker build -t pa/redis ../redis-centos7-atomicapp/
+
+```
+
+## Build refactored postgresql Nulecule app
+
+```
+[sudo] docker build -t pa/pg ../postgresql-centos7-atomicapp/
+```
+
+## Build refactored  sentry app
+
 ```
 [sudo] docker build -t projectatomic/sentry .
 ```
@@ -9,7 +24,7 @@
 - Copy ``answers.conf.sample`` to ``answers.conf`` and customize as needed.
 
 ```
-[sudo] atomic run projectatomic/sentry
+[sudo] atomicapp run --provider kubernetes projectatomic/sentry
 ```
 
 ## Kubernetes
@@ -25,17 +40,6 @@ NAME      LABELS        SELECTOR      IP(S)           PORT(S)
 sentry    name=sentry   name=sentry   10.254.131.20   9000/TCP
 ```
 
-## Docker
-
-Run ``sudo docker ps`` to check if the containers for sentry are running.
-
-```
-CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                     NAMES
-e0c500f83ea8        rtnpro/sentry                          "/docker-entrypoint.s"   2 seconds ago       Up 2 seconds        0.0.0.0:30001->9000/tcp   sentry
-dc6a8ef80731        redis                                  "/entrypoint.sh redis"   3 seconds ago       Up 2 seconds        6379/tcp                  sentry_redis
-0b8c51d12644        postgres                               "/docker-entrypoint.s"   3 seconds ago       Up 3 seconds        5432/tcp                  sentry_postgres
-```
-
 # Usage
 
 ## Kubernetes
@@ -44,6 +48,3 @@ dc6a8ef80731        redis                                  "/entrypoint.sh redis
 
 - Open ``http://10.254.131.20:9000`` in browser to access Sentry.
 
-## Docker
-- Setup sentry: ``sudo docker exec -ti sentry sentry upgrade``
-- Open ``http://localhost:30001`` in browser to access Sentry.
