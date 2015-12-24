@@ -6,15 +6,29 @@ metadata:
   name: PostgreSQL Atomic App
   appversion: 1.0.0
   description: This is PostgreSQL
+
+params:
+  - name: db_user
+    description: Database User
+  - name: db_pass
+    description: Database Password
+  - name: db_name
+    description: Database Name
+  - name: service
+    description: Name of the service
+    default: posgtres
+  - name: host_port
+    desription: Port to bind postgres service in host
+    default: 5432
+
 graph:
   - name: postgresql-atomicapp
     params:
-      - name: db_user
-        description: Database User
-      - name: db_pass
-        description: Database Password
-      - name: db_name
-        description: Database Name
+        db_user: $db_user
+        db_pass: $db_pass
+        db_name: $db_name
+        service: $service
+        hostPort: $host_port
     artifacts:
       kubernetes:
         - file://artifacts/kubernetes/postgresql-pod.yaml

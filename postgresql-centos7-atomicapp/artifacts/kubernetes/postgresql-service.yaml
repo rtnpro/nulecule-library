@@ -1,13 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: postgresql
+  name: $service
   labels:
     name: postgresql
 spec:
   ports:
     - protocol: TCP
-      port: 5432
+      port: $hostPort
       targetPort: 5432
       nodePort: 0
   selector:
