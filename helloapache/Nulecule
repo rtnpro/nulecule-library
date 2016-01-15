@@ -22,3 +22,6 @@ graph:
         - file://artifacts/kubernetes/hello-apache-pod.json
       marathon:
         - file://artifacts/marathon/helloapache.json
+      openshift:
+        - inherit:
+          - kubernetes

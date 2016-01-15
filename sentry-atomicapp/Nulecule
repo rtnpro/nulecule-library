@@ -7,35 +7,28 @@ metadata:
   appversion: 1.0.0
   description: This is sentry
 
-params:
-  - name: db_user
-    description: Database user
-    default: sentry
-  - name: db_pass
-    description: Database password
-    default: password
-  - name: db_name
-    description: Database name
-    default: sentry
-  - name: postgres_container_name
-    desciption: Container name for postgresql
-    default: postgres
-  - name: postgres_container_image
-    decription: Container image name for postgresql
-    default: postgres
-  - name: redis_container_name
-    default: redis
-  - name: redis_image_name
-    default: redis
-  - name: sentry_container_name
-    default: sentry
-  - name: sentry_image_name
-    default: rtnpro/sentry
-  - name: sentry_node_port
-    default: 30001
-
 graph:
   - name: postgresql
+    params:
+      - name: db_user
+        description: Database user
+        default: sentry
+
+      - name: db_pass
+        description: Database password
+        default: password
+
+      - name: db_name
+        description: Database name
+        default: sentry
+
+      - name: postgres_container_name
+        desciption: Container name for postgresql
+        default: postgres
+
+      - name: postgres_container_image
+        decription: Container image name for postgresql
+        default: postgres
     params:
       name: $postgres_container_name
       image: $postgres_container_image
@@ -47,16 +40,48 @@ graph:
 
   - name: redis
     params:
-      name: $redis_container_name
-      image: $redis_image_name
-      master_service: redis
+      - name: image_name
+        default: redis
+
+    mapping:
+        # Dict similar to config data needed by the external application
+        redismaster-app:
+            image: $image_name
+            service: $redis_service_name
+
+        # By default mapping extends current config data
+        # extend false will help in providing only those data
+        # the external app and it's children needs
+        # Default value is true.
+        _inherit: false
+
     source: docker://pa/redis
 
   - name: sentry
     params:
-      name: $sentry_container_name
-      image: $sentry_image_name
-      nodePort: $sentry_node_port
+      - name: sentry_container_name
+        default: sentry
+      - name: sentry_image_name
+        default: rtnpro/sentry
+      - name: sentry_node_port
+        default: 30001
+
+      # Reference a param from a sibling component
+      - name: db_user
+        link: $postgresql.db_user
+
+      # Reference a param from a sibling component.
+      - name: db_pass
+        link: $postgresql.db_pass
+
+    # Hypothetical, but allow mapping config values for local apps
+    # if needed
+    mapping:
+        sentry:
+          name: $sentry_container_name
+          image: $sentry_image_name
+          nodePort: $sentry_node_port
+
     artifacts:
       docker:
         - file://artifacts/docker/sentry

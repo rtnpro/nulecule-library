@@ -7,29 +7,21 @@ metadata:
   appversion: 0.0.1
   description: Redis Atomic App
 
-params:
-  - name: image
-    description: The redis master part
-    default: jasonbrooks/redis
-  - name: master_hostport
-    description: The host TCP port as the external endpoint
-    default: 6379
-  - name: slave_hostport
-    description: The host TCP port as the external endpoint
-    default: 6380
-  - name: master_service
-    description: Name of redis master service
-    default: redis-master
-  - name: slave_service
-    description: Name of redis slave service
-    default: redis-slave
-
 graph:
   - name: redismaster-app
     params:
-        image: $image
-        hostport: $master_hostport
-        service: $master_service
+      - name: image
+        description: The redis master part
+        default: jasonbrooks/redis
+
+      - name: hostport
+        description: The host TCP port as the external endpoint
+        default: 6379
+
+      - name: service
+        description: Name of redis master service
+        default: redis-master
+
     artifacts:
       kubernetes:
         - file://artifacts/kubernetes/redis-master-controller.json
@@ -38,10 +30,22 @@ graph:
         - file://artifacts/docker/redis-master_run
   - name: redisslave-app
     params:
-        image: $image
-        master_hostport: $master_hostport
-        hostport: $slave_hostport
-        service: $slave_service
+      - name: image
+        description: The redis slave part
+        default: jasonbrooks/redis
+
+      - name: hostport
+        description: The host TCP port as the external endpoint
+        default: 6380
+
+      - name: service
+        description: Name of redis slave service
+        default: redis-slave
+
+      # Reference param from a sibling component
+      - name: master_hostport
+        link: $redismaster-app.hostport
+
     artifacts:
       kubernetes:
         - file://artifacts/kubernetes/redis-slave-controller.json
